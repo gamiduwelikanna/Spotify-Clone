@@ -1,16 +1,8 @@
 import { Router } from 'express';
 const router = Router();
+import { authCallback } from  '../controller/auth.controller.js'
 
-router.post('/callback', async (req, res) => {
-    try{
-        const{id, firstName, lastName, imageUrl}=req.body;
 
-        //check if the user already exists
-        const user = await User.findOne({clerkId: id})
-    }catch (error){
-
-    }
-
-});
+router.post('/callback', authCallback);
 
 export default router;
