@@ -23,7 +23,7 @@ app.use(clerkMiddleware());
 app.use(fileupload({
     useTemporary: true,
     tempFileDir: path.join(__dirname, "tmp"),
-    createParentPath: true
+    createParentPath: true,
     limits: {
         fileSize: 10 * 1024 * 1024, //10MB maximum file size.
     }
@@ -39,7 +39,7 @@ app.use("/api/stats", statRoutes);
 
 //error handler
 app.use((err,req,res,next)=>{
-    res.status(500).json({message : err.message})
+    res.status(500).json({message : process.env.NODE_ENV === "production" ? "Internal server error" : err.message});
 })
 
 app.listen(PORT, () => {
