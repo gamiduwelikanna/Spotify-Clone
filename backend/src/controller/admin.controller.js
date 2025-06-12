@@ -2,7 +2,7 @@ import {Song} from "../models/song.model.js";
 import {Album} from "../models/album.model.js";
 import cloudinary from "../lib/cloudinary.js";
 
-//helper function for cloudinary uploads
+//helper function for cloudinary
 const uploadCloudinary = async(file) => {
     try{
         const result = await cloudinary.uploader.upload(file.tempFilePath, {
@@ -70,4 +70,40 @@ export const deleteSong = async (req, res, next) => {
         console.log("Error in deleting song", error);
         next(error);
     }
+}
+
+export const createAlbum = async (req, res, next) => {
+    try{
+        const{title , artist, releaseYear} = req.body;
+        const{imageFile} = req.files;
+
+        const imageUrl = await uploadCloudinary(imageFile);
+
+        const album = new Album({
+            title,
+            artist,
+            imageUrl,
+            releaseYear,
+        })
+    }catch (error){
+        console.log("Error in creating album", error);
+        next(error);
+    }
+
+}
+
+export const deleteAlbum = async (req, res, next) => {
+    try{
+        const {id} = req.params
+        await Song.deleteMany({albumId:id});
+        await Album.findByIdAndDelete(id);
+        res.status(200).json({message : "Album delete successfully."});
+    }catch (error){
+        console.log("Error in deleting album", error);
+        next(error);
+    }
+}
+
+export const checkAdmin = async (req, res, next) => {
+    res.status(200).json({admin: true});
 }
